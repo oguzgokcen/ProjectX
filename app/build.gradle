@@ -7,6 +7,7 @@ android {
     compileSdk 32
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.example.projectx"
         minSdk 21
         targetSdk 32
@@ -33,6 +34,7 @@ android {
 
 dependencies {
 
+    implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
