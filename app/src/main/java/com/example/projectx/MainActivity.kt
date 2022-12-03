@@ -3,8 +3,6 @@ package com.example.projectx
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,7 +10,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var favouritesButton : Button
     lateinit var gameFragment : GameFragment
     lateinit var favouritesFragment : Favourites
-    //lateinit var rvGames : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
