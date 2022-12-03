@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectx.databinding.ItemGameBinding
 
+import com.bumptech.glide.Glide
+
 
 class GameAdapter (
     var games: List<Game>
@@ -24,6 +26,10 @@ class GameAdapter (
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         holder.binding.apply {
             tvGame.text = games[position].title
+            tvScore.text = games[position].score
+            tvType.text = games[position].type
+            Glide.with(this.ivImage).load(games.get(position).imageURL).into(ivImage)
+
         }
 
     }
