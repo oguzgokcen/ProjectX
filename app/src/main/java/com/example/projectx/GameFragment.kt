@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class GameFragment : Fragment() {
     lateinit var rvGames : RecyclerView
-
+    lateinit var GameDetails : Fragment
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_game, container , false)
@@ -74,7 +74,7 @@ class GameFragment : Fragment() {
         rvGames = view.findViewById(R.id.rvGames)
         rvGames.setHasFixedSize(true)
         rvGames.layoutManager = LinearLayoutManager(view.context)
-        val adapter = GameAdapter(gameList)
+        val adapter = GameAdapter(gameList) // alttaki ile birleştirilebilir
         rvGames.adapter = adapter
 
         return view
