@@ -20,8 +20,6 @@ class GameFragment : Fragment()  {
         super.onCreate(savedInstanceState)
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_game, container , false)
-
-
         gameList = ArrayList()
         gameList.add(Game("Grand Theft Auto V",
             "https://static.metacritic.com/images/products/games/2/bab786f634eee57a1c68be2dddf3d1e5-98.jpg",
@@ -78,7 +76,7 @@ class GameFragment : Fragment()  {
         searchView = view.findViewById(R.id.idSV)
         rvGames.setHasFixedSize(true)
         rvGames.layoutManager = LinearLayoutManager(view.context)
-        gameAdapter = GameAdapter(gameList)
+        gameAdapter = GameAdapter(gameList) // alttaki ile birleştirilebilir
         rvGames.adapter = gameAdapter
 
 
