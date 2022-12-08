@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
         gameButton.setOnClickListener {
             gameButton.setTextColor(getApplication().getResources().getColor(R.color.activebuttonbluecolor))
             favouritesButton.setTextColor(getApplication().getResources().getColor(R.color.notactivebuttonbluecolor))
-            gameButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.gamebuttondrawable, 0, 0);
-            favouritesButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.favnotselecteddrawable, 0, 0);
+            gameButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.gamebuttondrawable, 0, 0)
+            favouritesButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.favnotselecteddrawable, 0, 0)
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.flFragment, gameFragment)
                 commit()

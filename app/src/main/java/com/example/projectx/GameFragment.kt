@@ -80,23 +80,27 @@ class GameFragment : Fragment()  {
         rvGames.layoutManager = LinearLayoutManager(view.context)
         gameAdapter = GameAdapter(gameList)
         rvGames.adapter = gameAdapter
+        val gameTitles: ArrayList<String> = ArrayList()
+        for (item in gameList){
+            gameTitles.add(item.title.lowercase())
 
+        }
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
+                if(!gameTitles.contains(query!!.lowercase()))
+                    Toast.makeText(activity, "No Data Found..", Toast.LENGTH_SHORT).show()
+
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 filter(newText)
-
                 return false
             }
         })
-
         return view
     }
-
 
     private fun filter(text: String?){
         // creating a new array list to filter our data.
@@ -111,16 +115,7 @@ class GameFragment : Fragment()  {
                 filteredlist.add(item)
             }
         }
-        if (filteredlist.isEmpty()) {
-            // if no item is added in filtered list we are
-            // displaying a toast message as no data found.
-            Toast.makeText(GameFragment().context, "No Data Found..", Toast.LENGTH_SHORT).show()
-        } else {
-            // at last we are passing that filtered
-            // list to our adapter class.
-            gameAdapter.filterList(filteredlist)
-            gameAdapter.notifyDataSetChanged()
-        }
-
+        gameAdapter.filterList(filteredlist)
+        gameAdapter.notifyDataSetChanged()
     }
 }
