@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-import kotlin.collections.ArrayList
 class GameFragment : Fragment()  {
     lateinit var rvGames : RecyclerView
     lateinit var gameAdapter: GameAdapter
@@ -87,12 +86,14 @@ class GameFragment : Fragment()  {
         }
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+
+
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if(!gameTitles.contains(query!!.lowercase()))
                     Toast.makeText(activity, "No Data Found..", Toast.LENGTH_SHORT).show()
-
                 return false
             }
+
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 filter(newText)

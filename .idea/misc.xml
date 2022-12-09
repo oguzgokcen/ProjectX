@@ -8,11 +8,17 @@
         <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/drawable/favnotselecteddrawable.xml" value="0.1" />
         <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/drawable/gamebuttondrawable.xml" value="0.197" />
         <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/drawable/gamenotselectedbuttondrawable.xml" value="0.1" />
+        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.2275" />
         <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1995" />
-        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/layout/fragment_blank.xml" value="0.18704710144927536" />
+        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/layout/fragment_favorites.xml" value="0.2" />
         <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/layout/fragment_favourites.xml" value="0.18704710144927536" />
-        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/layout/fragment_game.xml" value="0.18704710144927536" />
+        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/layout/fragment_game.xml" value="0.1" />
+        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/layout/item_game.xml" value="0.2" />
+        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/menu/bottom_nav.xml" value="0.4" />
+        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/menu/menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/ademm/AndroidStudioProjects/ProjectX/app/src/main/res/menu/nav.xml" value="0.253125" />
       </map>
     </option>
   </component>

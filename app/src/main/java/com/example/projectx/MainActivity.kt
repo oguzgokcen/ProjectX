@@ -2,7 +2,9 @@ package com.example.projectx
 
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -12,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var gameButton : Button
     lateinit var favouritesButton : Button
     lateinit var gameFragment : GameFragment
-    lateinit var favouritesFragment : Favourites
+    lateinit var favoritesFragment : FavoritesFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +27,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun createFragmentsAndAssignGameFirst(){
         gameFragment = GameFragment()
-        favouritesFragment = Favourites()
+        favoritesFragment = FavoritesFragment()
+
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flFragment, gameFragment)
             commit()
@@ -56,11 +59,12 @@ class MainActivity : AppCompatActivity() {
             gameButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.gamenotselectedbuttondrawable, 0, 0);
             favouritesButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.favdrawable, 0, 0);
             supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, favouritesFragment)
+                replace(R.id.flFragment, favoritesFragment)
                 commit()
             }
         }
 
     }
+
 
 }
