@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-import kotlin.collections.ArrayList
 class GameFragment : Fragment()  {
     lateinit var rvGames : RecyclerView
     lateinit var gameAdapter: GameAdapter
@@ -20,6 +19,8 @@ class GameFragment : Fragment()  {
         super.onCreate(savedInstanceState)
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_game, container , false)
+
+
         gameList = ArrayList()
         gameList.add(Game("Grand Theft Auto V",
             "https://static.metacritic.com/images/products/games/2/bab786f634eee57a1c68be2dddf3d1e5-98.jpg",
@@ -76,25 +77,31 @@ class GameFragment : Fragment()  {
         searchView = view.findViewById(R.id.idSV)
         rvGames.setHasFixedSize(true)
         rvGames.layoutManager = LinearLayoutManager(view.context)
-        gameAdapter = GameAdapter(gameList) // alttaki ile birleştirilebilir
+        gameAdapter = GameAdapter(gameList)
         rvGames.adapter = gameAdapter
+        val gameTitles: ArrayList<String> = ArrayList()
+        for (item in gameList){
+            gameTitles.add(item.title.lowercase())
 
+        }
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+
+
             override fun onQueryTextSubmit(query: String?): Boolean {
+                if(!gameTitles.contains(query!!.lowercase()))
+                    Toast.makeText(activity, "No Data Found..", Toast.LENGTH_SHORT).show()
                 return false
             }
+
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 filter(newText)
-
                 return false
             }
         })
-
         return view
     }
-
 
     private fun filter(text: String?){
         // creating a new array list to filter our data.
@@ -109,16 +116,7 @@ class GameFragment : Fragment()  {
                 filteredlist.add(item)
             }
         }
-        if (filteredlist.isEmpty()) {
-            // if no item is added in filtered list we are
-            // displaying a toast message as no data found.
-            Toast.makeText(GameFragment().context, "No Data Found..", Toast.LENGTH_SHORT).show()
-        } else {
-            // at last we are passing that filtered
-            // list to our adapter class.
-            gameAdapter.filterList(filteredlist)
-            gameAdapter.notifyDataSetChanged()
-        }
-
+        gameAdapter.filterList(filteredlist)
+        gameAdapter.notifyDataSetChanged()
     }
 }
