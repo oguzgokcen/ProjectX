@@ -1,19 +1,21 @@
 package com.example.projectx
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
 import java.util.ArrayList
 
 
-class FavoritesFragment : Fragment() {
+class FavoritesFragment : Fragment(),onClickListener {
     lateinit var rvFav : RecyclerView
     lateinit var gameAdapter: GameAdapter
     lateinit var favoritedList: ArrayList<Game>
@@ -28,7 +30,7 @@ class FavoritesFragment : Fragment() {
         favouritesText.text = "Favorites(${favoritedList.count()})"
         rvFav.setHasFixedSize(true)
         rvFav.layoutManager = LinearLayoutManager(view.context)
-        gameAdapter = GameAdapter(favoritedList)
+        gameAdapter = GameAdapter(favoritedList,this)
         rvFav.adapter = gameAdapter
         
 
@@ -59,5 +61,11 @@ class FavoritesFragment : Fragment() {
             "https://www.thinkwithportals.com/about.php",
             "95",
             "Action, puzzle"))
+    }
+
+    override fun onGameClickListener(position: Int,v: View?) { // TAMAMLANMADI
+        val actv = v?.context as AppCompatActivity
+        val intent = Intent(actv,DetailActivity::class.java)
+        startActivity(intent)
     }
 }

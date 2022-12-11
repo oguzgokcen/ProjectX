@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.projectx.databinding.ItemGameBinding
 
-class GameAdapter (var games: ArrayList<Game>) : RecyclerView.Adapter<GameAdapter.GameViewHolder>()
+class GameAdapter (var games: ArrayList<Game>,var onClickListener : onClickListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>()
 {
 
     inner class GameViewHolder(val binding: ItemGameBinding) : RecyclerView.ViewHolder(binding.root)
@@ -27,22 +28,17 @@ class GameAdapter (var games: ArrayList<Game>) : RecyclerView.Adapter<GameAdapte
     // sets the text and other viewed stuff initially
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         holder.binding.apply {
-
             tvGame.text = games[position].title
             tvScore.text = games[position].score
             tvType.text = games[position].type
             Glide.with(this.ivImage).load(games[position].imageURL).into(ivImage)
         }
-        holder.itemView.setOnClickListener(object : View.OnClickListener {
+        holder.itemView.setOnClickListener (
+            object : View.OnClickListener {
             override fun onClick(v: View?) {
-                val activity = v!!.context as AppCompatActivity
-                val gameDetails=GameDetails()
-                activity.supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.main,gameDetails).addToBackStack(null).commit()
-                }
+                onClickListener.onGameClickListener(holder.adapterPosition , v )
             }
-        })
-
+            })
 
     }
 
@@ -56,5 +52,4 @@ class GameAdapter (var games: ArrayList<Game>) : RecyclerView.Adapter<GameAdapte
         // list in our course array list.
         games = filterlist
     }
-
 }

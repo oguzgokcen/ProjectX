@@ -1,15 +1,18 @@
 package com.example.projectx
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-class GameFragment : Fragment()  {
+import kotlin.collections.ArrayList
+class GameFragment() : Fragment()  ,onClickListener {
     lateinit var rvGames : RecyclerView
     lateinit var gameAdapter: GameAdapter
     lateinit var gameList: ArrayList<Game>
@@ -20,10 +23,9 @@ class GameFragment : Fragment()  {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_game, container , false)
 
-
         gameList = ArrayList()
         gameList.add(Game("Grand Theft Auto V",
-            "https://static.metacritic.com/images/products/games/2/bab786f634eee57a1c68be2dddf3d1e5-98.jpg",
+            "https://s3-alpha-sig.figma.com/img/23a0/2645/15fb5b947775dad15186f70457f39007?Expires=1671408000&Signature=IRXqA7tsEhkNwYg1-bvMD1yHeSfW2s6jRZY~8GQGOl6DXUN5yrNMXf~GlzzK~4AoGAQHWrnc4fvDPJVNw0oEkRGEx~heBXtM7LQmDmfPP1ztOTuDWY4huLgwGdae4FUf5kWYLvgAGGR52-B6KmxobmTkI~sW2~5bbl16asZdjXTxlu71WwhYDHDj7PdSLHbgU-6CMFzOzM0qwCjlAGIT9UZIhT9phl6-UISET3TCYznN8cAOX2npWe0jWeVuRNzWoG003eOVsZdlL8kcgQOe8wAOTUY~NFFtXG55yzUyujVSCtCM-FbFRd5lPoMFDUVr6rfo1isO5D97M11-prklSg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA",
             "Los Santos: a sprawling sun-soaked metropolis full of self-help gurus," +
                     " starlets and fading celebrities, once the envy of the Western world, " +
                     "now struggling to stay alive in a time of economic uncertainty and cheap reality TV. " +
@@ -77,7 +79,7 @@ class GameFragment : Fragment()  {
         searchView = view.findViewById(R.id.idSV)
         rvGames.setHasFixedSize(true)
         rvGames.layoutManager = LinearLayoutManager(view.context)
-        gameAdapter = GameAdapter(gameList)
+        gameAdapter = GameAdapter(gameList,this) // alttaki ile birleştirilebilir
         rvGames.adapter = gameAdapter
         val gameTitles: ArrayList<String> = ArrayList()
         for (item in gameList){
@@ -102,7 +104,17 @@ class GameFragment : Fragment()  {
         })
         return view
     }
-
+    // ON CLİCK METHOT OGUZ
+    override fun onGameClickListener(position: Int,v: View?) {
+        val actv = v?.context as AppCompatActivity // viewin activitisini döndür
+        val intent = Intent(actv,DetailActivity::class.java) // intent ile o positiona göre activitye data gönder
+        intent.putExtra("name",gameList[position].title)
+        intent.putExtra("imageUrl",gameList[position].imageURL)
+        intent.putExtra("gameDesc",gameList[position].game_desc)
+        intent.putExtra("redditLink",gameList[position].reddit_link)
+        intent.putExtra("webLink",gameList[position].web_link)
+        startActivity(intent)
+    } // on click end
     private fun filter(text: String?){
         // creating a new array list to filter our data.
         val filteredlist: ArrayList<Game> = ArrayList()
