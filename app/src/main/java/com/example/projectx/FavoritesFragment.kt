@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
 import java.util.ArrayList
 
 
@@ -33,15 +32,12 @@ class FavoritesFragment : Fragment(),onClickListener {
         gameAdapter = GameAdapter(favoritedList,this)
         rvFav.adapter = gameAdapter
         
-
-
-        
         return view
     }
     fun addGamestoList(){
         favoritedList = ArrayList()
         favoritedList.add(Game("Grand Theft Auto V",
-            "https://static.metacritic.com/images/products/games/2/bab786f634eee57a1c68be2dddf3d1e5-98.jpg",
+            "https://s3-alpha-sig.figma.com/img/23a0/2645/15fb5b947775dad15186f70457f39007?Expires=1671408000&Signature=IRXqA7tsEhkNwYg1-bvMD1yHeSfW2s6jRZY~8GQGOl6DXUN5yrNMXf~GlzzK~4AoGAQHWrnc4fvDPJVNw0oEkRGEx~heBXtM7LQmDmfPP1ztOTuDWY4huLgwGdae4FUf5kWYLvgAGGR52-B6KmxobmTkI~sW2~5bbl16asZdjXTxlu71WwhYDHDj7PdSLHbgU-6CMFzOzM0qwCjlAGIT9UZIhT9phl6-UISET3TCYznN8cAOX2npWe0jWeVuRNzWoG003eOVsZdlL8kcgQOe8wAOTUY~NFFtXG55yzUyujVSCtCM-FbFRd5lPoMFDUVr6rfo1isO5D97M11-prklSg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA",
             "Los Santos: a sprawling sun-soaked metropolis full of self-help gurus," +
                     " starlets and fading celebrities, once the envy of the Western world, " +
                     "now struggling to stay alive in a time of economic uncertainty and cheap reality TV. " +
@@ -55,7 +51,7 @@ class FavoritesFragment : Fragment(),onClickListener {
             "96",
             "Action, shooter"))
         favoritedList.add( Game("Portal 2",
-            "https://static.metacritic.com/images/products/games/8/8ebc9aa5758d569f33e543d9fb629545-98.jpg",
+            "https://s3-alpha-sig.figma.com/img/179b/f4d6/5e080b5bd8adfa7aeabe119671e8542b?Expires=1672012800&Signature=ANFJebCTPG6GkU3nHVg~UWu-0ONsGRGaqgIskwWQSO6Op2yGmNayvdP4eisFj1mg2UqGlDdbK8WUYhcWWNcSUN-hQbiDtUXR~Qs0zLcU3OdD06rikpGJ0OWoG~n3K58m1NB~asyJEGFzg~WRojZxpJKiSW~VobCwWkaZz6hB7XFvn-aIxOUQk2ekNo71pLqfi6K3X1Qrqnf6lLAtZupT8V4fKLDkb-ygHGy0JsYBPQBDsTg6laugfhFeAXxCs7V69PZq~Jc-7BnmTHr1q3C2HEK7VMlfhsdY17q~~sttsrnvAuD4e9uEusAWODdk~gFhaBprytOwRaFAujpBu3yrEA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA",
             "Valve is working on a full-length sequel to its award-winning, mind-bending puzzle action game for the Xbox 360 and PC.",
             "https://www.reddit.com/submit?url=https%3A%2F%2Fwww.metacritic.com%2Fgame%2Fpc%2Fportal-2%3Fftag%3Dredsoshares&title=Portal%202%20Details%20and%20Credits%20for%20PC",
             "https://www.thinkwithportals.com/about.php",
@@ -66,6 +62,7 @@ class FavoritesFragment : Fragment(),onClickListener {
     override fun onGameClickListener(position: Int,v: View?) { // TAMAMLANMADI
         val actv = v?.context as AppCompatActivity
         val intent = Intent(actv,DetailActivity::class.java)
+
         startActivity(intent)
     }
 }

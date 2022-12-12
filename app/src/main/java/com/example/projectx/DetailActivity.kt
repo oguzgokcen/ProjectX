@@ -4,17 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
-import android.text.util.Linkify
-import android.view.View.OnClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import org.w3c.dom.Text
-import java.net.URL
 
 class DetailActivity : AppCompatActivity() {
-    lateinit var imageDetail: ImageView //Viewlar
+    lateinit var imageDetail: ImageView //Views
     lateinit var gameDescr :TextView
     lateinit var gameTitle : TextView
     lateinit var redditLinkText : TextView

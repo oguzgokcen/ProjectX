@@ -1,13 +1,9 @@
 package com.example.projectx
 
-import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.projectx.databinding.ItemGameBinding
@@ -36,6 +32,7 @@ class GameAdapter (var games: ArrayList<Game>,var onClickListener : onClickListe
             object : View.OnClickListener {
             override fun onClick(v: View?) {
                 onClickListener.onGameClickListener(holder.adapterPosition , v )
+                holder.itemView.setBackgroundColor(Color.GRAY)
             }
             })
 
