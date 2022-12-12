@@ -1,28 +1,29 @@
 package com.example.projectx
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-import kotlin.collections.ArrayList
 class GameFragment() : Fragment()  ,onClickListener {
     lateinit var rvGames : RecyclerView
     lateinit var gameAdapter: GameAdapter
     lateinit var gameList: ArrayList<Game>
     lateinit var searchView: SearchView
-    lateinit var constrain : ConstraintLayout
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreate(savedInstanceState)
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_game, container , false)
+        // Adding the games to the list:
         gameList = ArrayList()
         gameList.add(Game("Grand Theft Auto V",
             "https://s3-alpha-sig.figma.com/img/23a0/2645/15fb5b947775dad15186f70457f39007?Expires=1671408000&Signature=IRXqA7tsEhkNwYg1-bvMD1yHeSfW2s6jRZY~8GQGOl6DXUN5yrNMXf~GlzzK~4AoGAQHWrnc4fvDPJVNw0oEkRGEx~heBXtM7LQmDmfPP1ztOTuDWY4huLgwGdae4FUf5kWYLvgAGGR52-B6KmxobmTkI~sW2~5bbl16asZdjXTxlu71WwhYDHDj7PdSLHbgU-6CMFzOzM0qwCjlAGIT9UZIhT9phl6-UISET3TCYznN8cAOX2npWe0jWeVuRNzWoG003eOVsZdlL8kcgQOe8wAOTUY~NFFtXG55yzUyujVSCtCM-FbFRd5lPoMFDUVr6rfo1isO5D97M11-prklSg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA",
@@ -75,6 +76,20 @@ class GameFragment() : Fragment()  ,onClickListener {
             "https://www.l4d.com/game.html",
             "89",
             "Action, shooter") )
+        gameList.add(Game("Grand Theft Auto V",
+            "https://s3-alpha-sig.figma.com/img/23a0/2645/15fb5b947775dad15186f70457f39007?Expires=1671408000&Signature=IRXqA7tsEhkNwYg1-bvMD1yHeSfW2s6jRZY~8GQGOl6DXUN5yrNMXf~GlzzK~4AoGAQHWrnc4fvDPJVNw0oEkRGEx~heBXtM7LQmDmfPP1ztOTuDWY4huLgwGdae4FUf5kWYLvgAGGR52-B6KmxobmTkI~sW2~5bbl16asZdjXTxlu71WwhYDHDj7PdSLHbgU-6CMFzOzM0qwCjlAGIT9UZIhT9phl6-UISET3TCYznN8cAOX2npWe0jWeVuRNzWoG003eOVsZdlL8kcgQOe8wAOTUY~NFFtXG55yzUyujVSCtCM-FbFRd5lPoMFDUVr6rfo1isO5D97M11-prklSg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA",
+            "Los Santos: a sprawling sun-soaked metropolis full of self-help gurus," +
+                    " starlets and fading celebrities, once the envy of the Western world, " +
+                    "now struggling to stay alive in a time of economic uncertainty and cheap reality TV. " +
+                    "Amidst the turmoil, three very unique criminals plot their own chances of survival and success: " +
+                    "Franklin, a street hustler looking for tangible opportunities and serious money; " +
+                    "Michael, a professional ex-con whose retirement is less rosy than he figured it would be; and Trevor, " +
+                    "a violent dude driven by the opportunity for a cheap high and his next big score. With options at a premium, " +
+                    "the crew risks it all in a myriad of daring and dangerous heists that could set them up for life.",
+            "https://www.reddit.com/submit?url=https%3A%2F%2Fwww.metacritic.com%2Fgame%2Fpc%2Fgrand-theft-auto-v%3Fftag%3Dredsoshares&title=Grand%20Theft%20Auto%20V%20for%20PC%20Reviews",
+            "https://www.rockstargames.com/gta-v",
+            "96",
+            "Action, shooter"))
         rvGames = view.findViewById(R.id.rvGames)
         searchView = view.findViewById(R.id.idSV)
         rvGames.setHasFixedSize(true)
@@ -86,19 +101,28 @@ class GameFragment() : Fragment()  ,onClickListener {
             gameTitles.add(item.title.lowercase())
 
         }
+        val searchPlateId = searchView.context.resources.getIdentifier("android:id/search_plate", null, null)
+        val searchPlate = searchView.findViewById<View>(searchPlateId)
+        searchPlate?.setBackgroundColor(Color.TRANSPARENT)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
 
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if(!gameTitles.contains(query!!.lowercase()))
-                    Toast.makeText(activity, "No Data Found..", Toast.LENGTH_SHORT).show()
+                if(gameAdapter.games.isEmpty())  // if no game found with the given input string
+                    Toast.makeText(activity, "No Data Found", Toast.LENGTH_SHORT).show()
                 return false
             }
 
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                filter(newText)
+                if(newText!!.length > 3)
+                    filter(newText)  // if longer than 3 letters perform search
+                else{
+                    gameAdapter.games = gameList        // all games will be listed because no search performed
+                    gameAdapter.notifyDataSetChanged()  // this also added here because we don't want
+                    // to make search for 3 letters or less
+                }
                 return false
             }
         })
@@ -108,15 +132,14 @@ class GameFragment() : Fragment()  ,onClickListener {
     // ON CLİCK METHOT OGUZ
     override fun onGameClickListener(position: Int,v: View?) {
         val actv = v?.context as AppCompatActivity // viewin activitisini döndür
-        v.setBackgroundColor(0xE0E0E0)
         val intent = Intent(actv,DetailActivity::class.java) // intent ile o positiona göre activitye data gönder
-        intent.putExtra("name",gameList[position].title)
-        intent.putExtra("imageUrl",gameList[position].imageURL)
-        intent.putExtra("gameDesc",gameList[position].game_desc)
-        intent.putExtra("redditLink",gameList[position].reddit_link)
-        intent.putExtra("webLink",gameList[position].web_link)
-        intent.putExtra("score",gameList[position].score)
-        intent.putExtra("type",gameList[position].type)
+        intent.putExtra("name",gameAdapter.games[position].title)
+        intent.putExtra("imageUrl",gameAdapter.games[position].imageURL)
+        intent.putExtra("gameDesc",gameAdapter.games[position].game_desc)
+        intent.putExtra("redditLink",gameAdapter.games[position].reddit_link)
+        intent.putExtra("webLink",gameAdapter.games[position].web_link)
+        intent.putExtra("score",gameAdapter.games[position].score)
+        intent.putExtra("type",gameAdapter.games[position].type)
         startActivity(intent)
     } // on click end
     private fun filter(text: String?){
