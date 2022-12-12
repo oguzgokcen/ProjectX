@@ -7,10 +7,10 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.projectx.databinding.ItemGameBinding
-
 class GameAdapter (var games: ArrayList<Game>,var onClickListener : onClickListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>()
 {
 
@@ -24,7 +24,6 @@ class GameAdapter (var games: ArrayList<Game>,var onClickListener : onClickListe
         return GameViewHolder(binding)
 
     }
-
     // sets the text and other viewed stuff initially
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         holder.binding.apply {
