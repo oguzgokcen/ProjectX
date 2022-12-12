@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Game"
+        android:id="@+id/gamebutton"
+        android:icon="@drawable/gamenotselected"
+       />
+    <item android:title="Favourites"
+        android:id="@+id/favouritesbutton"
+        android:icon="@drawable/favnotselected"/>
+</menu>

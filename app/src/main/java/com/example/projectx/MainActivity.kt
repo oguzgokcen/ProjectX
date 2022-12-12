@@ -6,64 +6,34 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.fragment.app.Fragment
+import com.example.projectx.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var gameButton : Button
-    lateinit var favouritesButton : Button
-    lateinit var gameFragment : GameFragment
-    lateinit var favoritesFragment : FavoritesFragment
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        replaceFragment(GameFragment())
 
-        createFragmentsAndAssignGameFirst()
-        bindButtons()
-        setButtonsListeners()
-    }
-
-    private fun createFragmentsAndAssignGameFirst(){
-        gameFragment = GameFragment()
-        favoritesFragment = FavoritesFragment()
-
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment, gameFragment)
-            commit()
-        }
-    }
-
-    private fun bindButtons(){
-        gameButton = findViewById(R.id.gameButton)
-        favouritesButton = findViewById(R.id.favouritesButton)
-    }
-
-    fun setButtonsListeners(){
-
-        gameButton.setOnClickListener {
-            gameButton.setTextColor(getApplication().getResources().getColor(R.color.activebuttonbluecolor))
-            favouritesButton.setTextColor(getApplication().getResources().getColor(R.color.notactivebuttonbluecolor))
-            gameButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.gamebuttondrawable, 0, 0)
-            favouritesButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.favnotselecteddrawable, 0, 0)
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, gameFragment)
-                commit()
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.gamebutton -> replaceFragment(GameFragment())
+                R.id.favouritesbutton -> replaceFragment(FavoritesFragment())
             }
+            true
         }
+    }
 
-        favouritesButton.setOnClickListener {
-            favouritesButton.setTextColor(getApplication().getResources().getColor(R.color.activebuttonbluecolor))
-            gameButton.setTextColor(getApplication().getResources().getColor(R.color.notactivebuttonbluecolor))
-            gameButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.gamenotselectedbuttondrawable, 0, 0);
-            favouritesButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.favdrawable, 0, 0);
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, favoritesFragment)
-                commit()
-            }
-        }
-
+    private fun replaceFragment(fragment:Fragment){
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.flFragment,fragment)
+        fragmentTransaction.commit()
     }
 
 
