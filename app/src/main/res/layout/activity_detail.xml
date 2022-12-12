@@ -4,14 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailActivity">
+    tools:context=".DetailActivity"
+    android:id="@+id/activity_det">
+
+    <TextView
+        android:id="@+id/gameButton"
+        android:layout_width="49dp"
+        android:layout_height="21dp"
+        android:gravity="top"
+        android:text="Games"
+        android:textColor="#007AFF"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.301" />
+
+    <TextView
+        android:id="@+id/favButton"
+        android:layout_width="65dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text=" Favourite"
+        android:textColor="#007AFF"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.964"
+        app:layout_constraintStart_toEndOf="@+id/gameButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.23" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="411dp"
         android:layout_height="0dp"
-        android:layout_marginTop="88dp"
-        android:layout_marginBottom="330dp"
+        android:layout_marginTop="58dp"
+        android:layout_marginBottom="360dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,7 +140,6 @@
 
     <View
         android:id="@+id/background"
-        style="@style/Divider"
         android:layout_width="377dp"
         android:layout_height="62dp"
         android:layout_alignParentLeft="true"
@@ -138,10 +170,10 @@
         android:background="@drawable/background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.375"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/background"
-        app:layout_constraintVertical_bias="0.022" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/redditLink"
@@ -219,5 +251,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/background"
         app:layout_constraintVertical_bias="0.0" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
