@@ -31,8 +31,8 @@ class GameAdapter (var games: ArrayList<Game>,var onClickListener : onClickListe
         holder.itemView.setOnClickListener (
             object : View.OnClickListener {
             override fun onClick(v: View?) {
-                onClickListener.onGameClickListener(holder.adapterPosition , v )
                 holder.itemView.setBackgroundColor(Color.GRAY)
+                onClickListener.onGameClickListener(holder.adapterPosition , v )
             }
             })
 

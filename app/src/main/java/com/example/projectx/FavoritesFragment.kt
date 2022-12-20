@@ -24,17 +24,28 @@ class FavoritesFragment : Fragment(),onClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_favorites, container , false)
         rvFav = view.findViewById(R.id.rvFav)
+        favoritedList = ArrayList()
         favouritesText = view.findViewById(R.id.favouritesText)
-        addGamestoList()
+        //addGamestoList()
+        /*val bundle = arguments
+        val name = bundle!!.getString("name")
+        val imageUrl = bundle.getString("imageUrl")
+        val gameDesc = bundle.getString("gameDesc")
+        val redditLink =bundle.getString("redditLink")
+        val webLink = bundle.getString("webLink")
+        val score =bundle.getString("score")
+        val type = bundle.getString("type")
+        favoritedList.add(Game(name!!,imageUrl!!,gameDesc!!,redditLink!!,webLink!!,score!!,type!!))
+
+         */
         favouritesText.text = "Favorites(${favoritedList.count()})"
         rvFav.setHasFixedSize(true)
         rvFav.layoutManager = LinearLayoutManager(view.context)
         gameAdapter = GameAdapter(favoritedList,this)
         rvFav.adapter = gameAdapter
-        
         return view
     }
-    fun addGamestoList(){
+    /*fun addGamestoList(){
         favoritedList = ArrayList()
         favoritedList.add(Game("Grand Theft Auto V",
             "https://s3-alpha-sig.figma.com/img/23a0/2645/15fb5b947775dad15186f70457f39007?Expires=1671408000&Signature=IRXqA7tsEhkNwYg1-bvMD1yHeSfW2s6jRZY~8GQGOl6DXUN5yrNMXf~GlzzK~4AoGAQHWrnc4fvDPJVNw0oEkRGEx~heBXtM7LQmDmfPP1ztOTuDWY4huLgwGdae4FUf5kWYLvgAGGR52-B6KmxobmTkI~sW2~5bbl16asZdjXTxlu71WwhYDHDj7PdSLHbgU-6CMFzOzM0qwCjlAGIT9UZIhT9phl6-UISET3TCYznN8cAOX2npWe0jWeVuRNzWoG003eOVsZdlL8kcgQOe8wAOTUY~NFFtXG55yzUyujVSCtCM-FbFRd5lPoMFDUVr6rfo1isO5D97M11-prklSg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA",
@@ -57,12 +68,11 @@ class FavoritesFragment : Fragment(),onClickListener {
             "https://www.thinkwithportals.com/about.php",
             "95",
             "Action, puzzle"))
-    }
+    }*/
 
     override fun onGameClickListener(position: Int,v: View?) { // TAMAMLANMADI
         val actv = v?.context as AppCompatActivity
         val intent = Intent(actv,DetailActivity::class.java)
-
         startActivity(intent)
     }
 }

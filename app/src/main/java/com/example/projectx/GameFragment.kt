@@ -107,7 +107,6 @@ class GameFragment() : Fragment()  ,onClickListener {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
 
-
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if(gameAdapter.games.isEmpty())  // if no game found with the given input string
                     Toast.makeText(activity, "No Data Found", Toast.LENGTH_SHORT).show()
@@ -131,7 +130,9 @@ class GameFragment() : Fragment()  ,onClickListener {
 
     // ON CLİCK METHOT
     override fun onGameClickListener(position: Int,v: View?) {
-        val actv = v?.context as AppCompatActivity // viewin activitysini döndür
+        val actv = v?.context as AppCompatActivity // viewin activitisini döndür
+        v.setBackgroundColor(0xE0E0E0)
+
         val intent = Intent(actv,DetailActivity::class.java) // intent ile o positiona göre activitye data gönder
         intent.putExtra("name",gameAdapter.games[position].title)
         intent.putExtra("imageUrl",gameAdapter.games[position].imageURL)
