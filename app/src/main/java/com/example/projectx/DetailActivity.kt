@@ -11,6 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.example.projectx.Models.GameModel
+import com.example.projectx.Models.GenresModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -27,21 +29,15 @@ class DetailActivity : AppCompatActivity() {
     lateinit var favFragment: FavoritesFragment
     lateinit var sp: SharedPreferences
     lateinit var spct: SharedPreferences
-    lateinit var list:ArrayList<Game>
+    lateinit var list:ArrayList<GameModel>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
         bindViews()
         val bundle = Bundle()
-        val name = intent.getStringExtra("name")
-        val imageUrl = intent.getStringExtra("imageUrl")
-        val gameDesc = intent.getStringExtra("gameDesc")
-        val redditLink = intent.getStringExtra("redditLink")
-        val webLink = intent.getStringExtra("webLink")
-        val score = intent.getStringExtra("score")
-        val type = intent.getStringExtra("type")
-        initViews(name,imageUrl,gameDesc,redditLink,webLink) // intent'den verileri alma
-        val currentGame = Game(name!!,imageUrl!!,gameDesc!!,redditLink!!,webLink!!,score!!,type!!)
+        val game : GameModel = intent.getSerializableExtra("game") as GameModel
+        initViews(game.name,game.background_image,game.description,game.reddit_url,game.website) // intent'den verileri alma
+
         sp = getSharedPreferences("sharedpref", Context.MODE_PRIVATE) //sp oluşturulması
         spct =getSharedPreferences("sharedprefct",Context.MODE_PRIVATE)
         favButton.setOnClickListener {
@@ -52,11 +48,11 @@ class DetailActivity : AppCompatActivity() {
             list = ArrayList()
             if(ct!=0) { // eğer favori listesi boş değilse o anki listeyi al
                 val currjson = sp.getString("favGames", null)
-                val type: Type = object : TypeToken<ArrayList<Game>>() {}.type
+                val type: Type = object : TypeToken<ArrayList<GameModel>>() {}.type
                 list = gson.fromJson(currjson, type)
             }
-            if(!list.contains(currentGame)){ // favoride yoksa ekle
-                list.add(currentGame)
+            if(!list.contains(game)){ // favoride yoksa ekle
+                list.add(game)
                 val json = gson.toJson(list)
                 editor.putString("favGames",json)
                 ct+=1 // sayaçı arttır

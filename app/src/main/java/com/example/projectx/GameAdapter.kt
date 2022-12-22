@@ -1,13 +1,18 @@
 package com.example.projectx
 
 import android.graphics.Color
+import android.annotation.SuppressLint
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.projectx.Models.GameModel
+import com.example.projectx.Models.GenresModel
 import com.example.projectx.databinding.ItemGameBinding
-class GameAdapter (var games: ArrayList<Game>,var onClickListener : onClickListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>()
+class GameAdapter (var games: List<GameModel>,var onClickListener : onClickListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>()
 {
 
     inner class GameViewHolder(val binding: ItemGameBinding) : RecyclerView.ViewHolder(binding.root)
@@ -21,18 +26,29 @@ class GameAdapter (var games: ArrayList<Game>,var onClickListener : onClickListe
 
     }
     // sets the text and other viewed stuff initially
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         holder.binding.apply {
-            tvGame.text = games[position].title
-            tvScore.text = games[position].score
-            tvType.text = games[position].type
-            Glide.with(this.ivImage).load(games[position].imageURL).into(ivImage)
+            tvGame.text = games[position].name
+            tvScore.text = games[position].metacritic.toString()
+            var genres : String = " "
+
+            for ((index, value) in games[position].genres.withIndex()) {
+                if(index != games[position].genres.size - 1){
+                    genres += value.name.toString() + ", "
+                }
+                else{
+                    genres += value.name.toString()
+                }
+            }
+            tvType.text = genres
+            Glide.with(this.ivImage).load(games[position].background_image).into(ivImage)
         }
         holder.itemView.setOnClickListener (
             object : View.OnClickListener {
             override fun onClick(v: View?) {
                 onClickListener.onGameClickListener(holder.adapterPosition , v )
-                holder.itemView.setBackgroundColor(Color.GRAY)
+
             }
             })
 
@@ -43,7 +59,7 @@ class GameAdapter (var games: ArrayList<Game>,var onClickListener : onClickListe
         return games.size
     }
 
-    fun filterList(filterlist: ArrayList<Game>) {
+    fun filterList(filterlist: List<GameModel>) {
         // below line is to add our filtered
         // list in our course array list.
         games = filterlist

@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.projectx.Models.GameModel
+
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -21,8 +23,8 @@ import java.lang.reflect.Type
 class FavoritesFragment : Fragment(), onClickListener {
     lateinit var rvFav : RecyclerView
     lateinit var gameAdapter: GameAdapter
-    lateinit var favoritedList: ArrayList<Game>
-    lateinit var tempfavoritedList: ArrayList<Game>
+    lateinit var favoritedList: ArrayList<GameModel>
+    lateinit var tempfavoritedList: ArrayList<GameModel>
     lateinit var favouritesText: TextView
     lateinit var sp: SharedPreferences
     lateinit var spct:SharedPreferences
@@ -31,6 +33,7 @@ class FavoritesFragment : Fragment(), onClickListener {
         val view = inflater.inflate(R.layout.fragment_favorites, container , false)
         rvFav = view.findViewById(R.id.rvFav)
         favouritesText = view.findViewById(R.id.favouritesText)
+
         sp = this.requireActivity().getSharedPreferences("sharedpref", Context.MODE_PRIVATE)
         spct = this.requireActivity().getSharedPreferences("sharedprefct", Context.MODE_PRIVATE)
         val ct =spct.getInt("ct",0)
@@ -38,7 +41,7 @@ class FavoritesFragment : Fragment(), onClickListener {
         if (ct>0) { // fav listesine eklenecek varsa
             val gson = Gson()
             val json = sp.getString("favGames", null)
-            val type: Type = object : TypeToken<ArrayList<Game>>() {}.type
+            val type: Type = object : TypeToken<ArrayList<GameModel>>() {}.type
             tempfavoritedList = ArrayList()
             tempfavoritedList = gson.fromJson(json,type)
             for (games in tempfavoritedList){
@@ -53,16 +56,12 @@ class FavoritesFragment : Fragment(), onClickListener {
         rvFav.adapter = gameAdapter
         return view
     }
-    override fun onGameClickListener(position: Int,v: View?) { // TAMAMLANMADI
+
+    override  fun onGameClickListener(position: Int, v: View?) { // TAMAMLANMADI
         val actv = v?.context as AppCompatActivity
         val intent = Intent(actv,DetailActivity::class.java)
-        intent.putExtra("name",gameAdapter.games[position].title)
-        intent.putExtra("imageUrl",gameAdapter.games[position].imageURL)
-        intent.putExtra("gameDesc",gameAdapter.games[position].game_desc)
-        intent.putExtra("redditLink",gameAdapter.games[position].reddit_link)
-        intent.putExtra("webLink",gameAdapter.games[position].web_link)
-        intent.putExtra("score",gameAdapter.games[position].score)
-        intent.putExtra("type",gameAdapter.games[position].type)
+        intent.putExtra("game", gameAdapter.games[position])
+      //  intent.putExtra("type",gameAdapter.games[position])
         startActivity(intent)
     }
 }
