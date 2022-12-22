@@ -1,5 +1,6 @@
 package com.example.projectx
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ class GameAdapter (var games: ArrayList<Game>,var onClickListener : onClickListe
             object : View.OnClickListener {
             override fun onClick(v: View?) {
                 onClickListener.onGameClickListener(holder.adapterPosition , v )
+                holder.itemView.setBackgroundColor(Color.GRAY)
             }
             })
 
