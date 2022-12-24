@@ -12,9 +12,9 @@ import com.bumptech.glide.Glide
 import com.example.projectx.Models.GameModel
 import com.example.projectx.Models.GenresModel
 import com.example.projectx.databinding.ItemGameBinding
-class GameAdapter (var games: List<GameModel>,var onClickListener : onClickListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>()
+class GameAdapter (var onClickListener : onClickListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>()
 {
-
+    var games =  ArrayList<GameModel>()
     inner class GameViewHolder(val binding: ItemGameBinding) : RecyclerView.ViewHolder(binding.root)
 
     // if the user scrolled little bit and another item was recycled and new item needs to be viewed
@@ -54,14 +54,13 @@ class GameAdapter (var games: List<GameModel>,var onClickListener : onClickListe
 
     }
 
+    fun addGame(newGames : List<GameModel>){
+        games.addAll(newGames)
+        notifyDataSetChanged()
+    }
+
     // how many items we have currently in recyclerview,
     override fun getItemCount(): Int {
         return games.size
-    }
-
-    fun filterList(filterlist: List<GameModel>) {
-        // below line is to add our filtered
-        // list in our course array list.
-        games = filterlist
     }
 }

@@ -52,7 +52,8 @@ class FavoritesFragment : Fragment(), onClickListener {
         favouritesText.text = "Favorites(${favoritedList.count()})"
         rvFav.setHasFixedSize(true)
         rvFav.layoutManager = LinearLayoutManager(view.context)
-        gameAdapter = GameAdapter(favoritedList,this)
+        gameAdapter = GameAdapter(this)
+        gameAdapter.addGame(favoritedList)
         rvFav.adapter = gameAdapter
         return view
     }

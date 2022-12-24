@@ -1,8 +1,6 @@
 package com.example.projectx
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,10 +26,18 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class GameFragment() : Fragment()  ,onClickListener {
     lateinit var rvGames : RecyclerView
     lateinit var gameAdapter: GameAdapter
+    lateinit var layoutManager : LinearLayoutManager
 
     lateinit var searchView: SearchView
-
+    //var page = 1
     private val BASE_URL = "https://api.rawg.io/api/"
+    var totalItemCount: Int = 0
+    var loading = true
+    var searchQuery : String? = ""
+    lateinit var call : Call<GamesApiResponse>
+    var searching : Boolean = false
+    var lastVisible = 0
+
     //private var page: Int = 1
     //private var currentSearchQuery : String? = null
 
@@ -51,79 +58,91 @@ class GameFragment() : Fragment()  ,onClickListener {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_game, container , false)
         // Adding the games to the list:
+
         searchView = view.findViewById(R.id.idSV)
+        rvGames = view.findViewById(R.id.rvGames)
+        layoutManager = LinearLayoutManager(view.context)
+        gameAdapter = GameAdapter(this)
+        rvGames.setHasFixedSize(true)
+        rvGames.layoutManager = layoutManager
+
+        rvGames.adapter = gameAdapter
 
 
         val searchPlateId = searchView.context.resources.getIdentifier("android:id/search_plate", null, null)
         val searchPlate = searchView.findViewById<View>(searchPlateId)
         searchPlate?.setBackgroundColor(Color.TRANSPARENT)
 
-
-        callApi(view,null)
+        callApi(searchQuery)
+       // page++
 
        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
 
             override fun onQueryTextSubmit(query: String?): Boolean {
 
-                    callApi(view, query)
                     return false
             }
 
 
             override fun onQueryTextChange(newText: String?): Boolean {
+
+            //    pae = 1
+                call.cancel()
+                gameAdapter.games.clear()
+                totalItemCount = 0
+                lastVisible = 0
                if(newText!!.length > 3)
                {
-                   callApi(view, newText)
+
+                   Log.e("MESS", "CHANGED")
+                   searchQuery = newText
+                   callApi(searchQuery)
                }
                 else{
-                   callApi(view, null)
+
+                   Log.e("MESS", "CHANGED")
+                   searchQuery = null
+                   callApi(searchQuery)
                 }
                 return false
             }
         })
 
-       /* val layoutManager = LinearLayoutManager(view.context)
-        var loading = true
-        var pastVisiblesItems: Int
-        var visibleItemCount: Int
-        var totalItemCount: Int
 
         rvGames.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) { //check for scroll down
-                    visibleItemCount = layoutManager.childCount
-                    totalItemCount = layoutManager.itemCount
-                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
-                    if (loading) {
-                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                            loading = false
-                            Log.v("...", "Last Item Wow !")
-                            page = page + 1
-                            callApi(view,null)
-                            loading = true
-                        }
-                    }
+                layoutManager = LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
+
+                lastVisible = layoutManager.findLastCompletelyVisibleItemPosition()
+                totalItemCount = layoutManager.itemCount
+                var firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
+               // Log.e("MESS", lastVisible.toString())
+               Log.e("LAST VISIBLE IN LAST", lastVisible.toString())
+              //  Log.e("FIRST VISIBLE IN LAST", firstVisible.toString())
+               // Log.e("TOTAL ITEM COUNT", totalItemCount.toString())
+                if (lastVisible == totalItemCount - 1 && loading) {
+                    callApi(searchQuery)
+
+                    loading = false
                 }
             }
-        })*/
 
-
+        })
 
         return view
     }
 
-    fun showGames(view : View, list: List<GameModel>){
-        rvGames = view.findViewById(R.id.rvGames)
-        //rvGames.setHasFixedSize(true)
-        rvGames.layoutManager = LinearLayoutManager(view.context)
-        gameAdapter = GameAdapter(list,this) // alttaki ile birleştirilebilir
-        rvGames.adapter = gameAdapter
-    }
-
-    fun callApi(view : View, query : String?){
+    fun callApi(query : String?){
         val apiService = retrofit.create(GameApiService::class.java)
 
-        val call = apiService.getGames(key = "f11caa5ea61840b99a7be5ae1f243d15", 1, page_size = 10,query,null,null)
+        var page : Int = 1
+        if(totalItemCount % 10 == 0 && lastVisible != 0){
+            page = totalItemCount/10 + 1
+        }
+        Log.e("LAST VISIBLE", lastVisible.toString())
+        Log.e("PAGE", page.toString())
+        call = apiService.getGames(key = "f11caa5ea61840b99a7be5ae1f243d15", page, page_size = 10,query,null,null)
 
         // call objesini async bir şekilde çağırmak için enqueue kullanırız
         call.enqueue(object: Callback<GamesApiResponse> {
@@ -133,13 +152,14 @@ class GameFragment() : Fragment()  ,onClickListener {
                 if(response.code() == 200){
                     // httpde body'de veri döner
                     val userList = response.body()!!.results
-                    showGames(view,userList)
-
-                    Log.e("API",userList.toString())
+                    gameAdapter.addGame(userList)
+                 //   totalItemCount += 9
+                    loading = true
                 }
                 else{
                     Log.e("API","REQUEST FAIL")
                 }
+
             }
 
             override fun onFailure(call: Call<GamesApiResponse>, t: Throwable) {
@@ -148,9 +168,8 @@ class GameFragment() : Fragment()  ,onClickListener {
             }
 
         })
+
     }
-
-
 
     // ON CLİCK METHOT OGUZ
     override fun onGameClickListener(position: Int, v: View?) {
