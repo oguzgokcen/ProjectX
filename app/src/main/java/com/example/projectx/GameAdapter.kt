@@ -1,16 +1,12 @@
 package com.example.projectx
 
-import android.graphics.Color
 import android.annotation.SuppressLint
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.projectx.Models.GameModel
-import com.example.projectx.Models.GenresModel
 import com.example.projectx.databinding.ItemGameBinding
 class GameAdapter (var onClickListener : onClickListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>()
 {

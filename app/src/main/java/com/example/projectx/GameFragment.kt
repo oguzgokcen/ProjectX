@@ -57,6 +57,13 @@ class GameFragment() : Fragment()  ,onClickListener {
         super.onCreate(savedInstanceState)
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_game, container , false)
+        /*if(resources.configuration.equals(Configuration.ORIENTATION_PORTRAIT)){
+            rvGames.layoutManager = GridLayoutManager(context, 1)
+        }
+        else{
+            rvGames.layoutManager = GridLayoutManager(context, 2)
+        }*/
+
         // Adding the games to the list:
 
         searchView = view.findViewById(R.id.idSV)
@@ -75,6 +82,8 @@ class GameFragment() : Fragment()  ,onClickListener {
 
         callApi(searchQuery)
        // page++
+
+
 
        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
 
@@ -133,7 +142,18 @@ class GameFragment() : Fragment()  ,onClickListener {
         return view
     }
 
-    fun callApi(query : String?){
+
+    fun showGames(view : View, list: List<GameModel>){
+        rvGames = view.findViewById(R.id.rvGames)
+
+        //rvGames.setHasFixedSize(true)
+        rvGames.layoutManager = LinearLayoutManager(view.context)
+        gameAdapter = GameAdapter(list,this) // alttaki ile birleştirilebilir
+        rvGames.adapter = gameAdapter
+    }
+
+    fun callApi(view : View, query : String?){
+    
         val apiService = retrofit.create(GameApiService::class.java)
 
         var page : Int = 1

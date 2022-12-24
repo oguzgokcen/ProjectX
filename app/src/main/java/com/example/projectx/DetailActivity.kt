@@ -6,21 +6,21 @@ import android.content.SharedPreferences
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.SparseBooleanArray
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.projectx.Models.GameModel
-import com.example.projectx.Models.GenresModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.ms.square.android.expandabletextview.ExpandableTextView
 import java.lang.reflect.Type
 
 @Suppress("NAME_SHADOWING")
 class DetailActivity : AppCompatActivity() {
     lateinit var imageDetail: ImageView //Views
-    lateinit var gameDescr :TextView
+    lateinit var gameDescr : ExpandableTextView
     lateinit var gameTitle : TextView
     lateinit var redditLinkText : TextView
     lateinit var webLinkText : TextView
@@ -64,6 +64,7 @@ class DetailActivity : AppCompatActivity() {
             /*cteditor.clear().commit() // şimdilik fav listi temizlemek için bir oyuna gir fav ekleye bas
             editor.clear().commit()*/
         }
+
         gameButton.setOnClickListener { // geri dönüş butonu
             finish()
             favFragment.arguments = bundle
@@ -82,7 +83,12 @@ class DetailActivity : AppCompatActivity() {
     fun initViews(name:String?,imageUrl:String?,gameDesc: String?,redditLink: String?,webLink:String?){
         gameTitle.text =name // oyun adı
         Glide.with(imageDetail).load(imageUrl).into(imageDetail) // oyun resmi url'den
-        gameDescr.text = gameDesc // oyun açıklaması
+        val regex = "</?.*?>".toRegex()  // to replace tags came from api in description string
+        val replacedDesc = gameDesc!!.replace(regex, "")
+        gameDescr.text = replacedDesc // oyun açıklaması
+
+
+
         redditLinkText.setOnClickListener{
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(redditLink))
             startActivity(intent)
