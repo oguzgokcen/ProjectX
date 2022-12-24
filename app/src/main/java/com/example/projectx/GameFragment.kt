@@ -1,8 +1,12 @@
 package com.example.projectx
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +15,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectx.Models.GameModel
@@ -26,9 +31,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class GameFragment() : Fragment()  ,onClickListener {
     lateinit var rvGames : RecyclerView
     lateinit var gameAdapter: GameAdapter
-    lateinit var layoutManager : LinearLayoutManager
-
+    //lateinit var layoutManager : LinearLayoutManager
+    lateinit var gridLayoutManager: GridLayoutManager  //!!!!!!
     lateinit var searchView: SearchView
+
+
     //var page = 1
     private val BASE_URL = "https://api.rawg.io/api/"
     var totalItemCount: Int = 0
@@ -52,7 +59,6 @@ class GameFragment() : Fragment()  ,onClickListener {
         .baseUrl(BASE_URL)
         .build()
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreate(savedInstanceState)
         // Inflate the layout for this fragment
@@ -68,38 +74,39 @@ class GameFragment() : Fragment()  ,onClickListener {
 
         searchView = view.findViewById(R.id.idSV)
         rvGames = view.findViewById(R.id.rvGames)
-        layoutManager = LinearLayoutManager(view.context)
+        //Done inside onCreateView because state should be restored when we switch between favorites and games tabs
+        if(resources.configuration.orientation.equals(Configuration.ORIENTATION_LANDSCAPE))
+            gridLayoutManager = GridLayoutManager(view.context, 2)
+        else
+            gridLayoutManager = GridLayoutManager(view.context, 1)
+
+        //layoutManager = LinearLayoutManager(view.context)
         gameAdapter = GameAdapter(this)
         rvGames.setHasFixedSize(true)
-        rvGames.layoutManager = layoutManager
+        rvGames.layoutManager = gridLayoutManager
 
         rvGames.adapter = gameAdapter
-
 
         val searchPlateId = searchView.context.resources.getIdentifier("android:id/search_plate", null, null)
         val searchPlate = searchView.findViewById<View>(searchPlateId)
         searchPlate?.setBackgroundColor(Color.TRANSPARENT)
-
         callApi(searchQuery)
-       // page++
-
-
+        // page++
 
        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
 
             override fun onQueryTextSubmit(query: String?): Boolean {
-
+                    callApi(searchQuery)
                     return false
             }
 
-
             override fun onQueryTextChange(newText: String?): Boolean {
-
             //    pae = 1
                 call.cancel()
                 gameAdapter.games.clear()
                 totalItemCount = 0
                 lastVisible = 0
+
                if(newText!!.length > 3)
                {
 
@@ -107,25 +114,27 @@ class GameFragment() : Fragment()  ,onClickListener {
                    searchQuery = newText
                    callApi(searchQuery)
                }
+
                 else{
 
                    Log.e("MESS", "CHANGED")
                    searchQuery = null
                    callApi(searchQuery)
                 }
+
                 return false
             }
         })
 
-
         rvGames.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                layoutManager = LinearLayoutManager::class.java.cast(recyclerView.layoutManager)
 
-                lastVisible = layoutManager.findLastCompletelyVisibleItemPosition()
-                totalItemCount = layoutManager.itemCount
-                var firstVisible = layoutManager.findFirstCompletelyVisibleItemPosition()
+                // CHANGE TO layoutManager!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                gridLayoutManager = GridLayoutManager::class.java.cast(recyclerView.layoutManager) as GridLayoutManager
+                lastVisible = gridLayoutManager.findLastCompletelyVisibleItemPosition()
+                totalItemCount = gridLayoutManager.itemCount
+                var firstVisible = gridLayoutManager.findFirstCompletelyVisibleItemPosition()
                // Log.e("MESS", lastVisible.toString())
                Log.e("LAST VISIBLE IN LAST", lastVisible.toString())
               //  Log.e("FIRST VISIBLE IN LAST", firstVisible.toString())
@@ -142,18 +151,42 @@ class GameFragment() : Fragment()  ,onClickListener {
         return view
     }
 
+    // TO SAVE THE STATE WHEN ROTATED*****************************************************************
+    private val KEY_RECYCLER_STATE = "recycler_state"
+    private lateinit var mBundleRecyclerViewState: Bundle
+    private lateinit var mListState: Parcelable
 
-    fun showGames(view : View, list: List<GameModel>){
-        rvGames = view.findViewById(R.id.rvGames)
+    override fun onPause() {
+        super.onPause()
+        mBundleRecyclerViewState = Bundle()
+        mListState = rvGames.layoutManager!!.onSaveInstanceState()!!
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, mListState)
 
-        //rvGames.setHasFixedSize(true)
-        rvGames.layoutManager = LinearLayoutManager(view.context)
-        gameAdapter = GameAdapter(list,this) // alttaki ile birleştirilebilir
-        rvGames.adapter = gameAdapter
     }
 
-    fun callApi(view : View, query : String?){
-    
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        onPause()
+        Handler(Looper.getMainLooper()).postDelayed(Runnable(){
+            kotlin.run {
+                mListState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE)!!
+                rvGames.layoutManager?.onRestoreInstanceState(mListState)
+            } }, 50)
+
+        if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            gridLayoutManager.spanCount = 2
+        }
+        else{
+            gridLayoutManager.spanCount = 1
+        }
+        rvGames.layoutManager = gridLayoutManager
+
+    }
+    // TO SAVE THE STATE WHEN ROTATED ENDS*****************************************************************
+
+
+    fun callApi(query : String?){
+
         val apiService = retrofit.create(GameApiService::class.java)
 
         var page : Int = 1
