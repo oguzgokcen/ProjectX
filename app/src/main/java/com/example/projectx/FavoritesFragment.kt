@@ -1,11 +1,14 @@
 package com.example.projectx
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +16,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,7 +43,6 @@ class FavoritesFragment : Fragment(), onClickListener {
     lateinit var cteditor:Editor
     lateinit var gson: Gson
     private var ct:Int = 0
-    private var dataSetChanged:Boolean = false
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_favorites, container , false)
@@ -60,13 +66,14 @@ class FavoritesFragment : Fragment(), onClickListener {
         }
         favouritesText.text = "Favorites(${favoritedList.count()})"
         rvFav.setHasFixedSize(true)
-        rvFav.layoutManager = LinearLayoutManager(view.context)
+        rvFav.layoutManager = LinearLayoutManager(activity)
         gameAdapter = GameAdapter(this)
         gameAdapter.addGame(favoritedList)
-        rvFav.adapter = gameAdapter
+        rvFav.adapter =gameAdapter
         swipeToDelete()
         return view
     }
+
 
 
 
@@ -104,7 +111,7 @@ class FavoritesFragment : Fragment(), onClickListener {
         editor.apply()
         favouritesText.text = "Favorites(${favoritedList.count()})"
     }
-    fun swipeToDelete(){
+    fun swipeToDelete() =
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -119,6 +126,16 @@ class FavoritesFragment : Fragment(), onClickListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // this method is called when we swipe our item to right direction.
                 // on below line we are getting the item at a particular position.
+                fun deleteGame(): (DialogInterface, Int) -> Unit {
+                    favoritedList.removeAt(viewHolder.adapterPosition)
+                    // below line is to notify our item is removed from adapter.
+                    gameAdapter.games.clear()
+                    gameAdapter.addGame(favoritedList)
+                    //gameAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+                    deleteFavourite()
+                    Log.e("GAME ADAPTER : ",gameAdapter.games.size.toString())
+                    return deleteGame()
+                }
                 val deletedGame: GameModel =
                     favoritedList.get(viewHolder.adapterPosition)
 
@@ -128,13 +145,32 @@ class FavoritesFragment : Fragment(), onClickListener {
 
                 // this method is called when item is swiped.
                 // below line is to remove item from our array list.
-                favoritedList.removeAt(viewHolder.adapterPosition)
-                // below line is to notify our item is removed from adapter.
-                gameAdapter.notifyItemRemoved(viewHolder.adapterPosition)
-                deleteFavourite()
-                dataSetChanged = true
+
+                //gameAdapter.notifyDataSetChanged()
                 // below line is to display our snackbar with action.
-                Snackbar.make(rvFav, "Deleted " + deletedGame.name, Snackbar.LENGTH_LONG)
+
+                val builder = AlertDialog.Builder(activity,R.style.AlertDialogTheme)
+                builder.setMessage("Oyunu favoilerden çıkarmak istediğinizden emin misiniz")
+                builder.setNegativeButton("Hayır", null)
+                builder.setPositiveButton(
+                    "Evet",object:DialogInterface.OnClickListener{
+                        override fun onClick(dialog: DialogInterface?, which: Int) {
+                            favoritedList.removeAt(viewHolder.adapterPosition)
+                            // below line is to notify our item is removed from adapter.
+                            gameAdapter.games.clear()
+                            gameAdapter.addGame(favoritedList)
+                            //gameAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+                            deleteFavourite()
+                            Log.e("GAME ADAPTER : ",gameAdapter.games.size.toString())
+                        }
+
+                    })
+                val dialog:AlertDialog = builder.create()
+                dialog.show()
+
+
+
+                /*Snackbar.make(rvFav, "Deleted " + deletedGame.name, Snackbar.LENGTH_LONG)
                     .setAction(
                         "Undo",
                         View.OnClickListener {
@@ -144,13 +180,12 @@ class FavoritesFragment : Fragment(), onClickListener {
                             addFavourite()
                             // below line is to notify item is
                             // added to our adapter class.
-                            gameAdapter.notifyItemInserted(position)
-                            dataSetChanged = true
-                        }).show()
+                            //gameAdapter.notifyItemInserted(position)
+                            gameAdapter.games.clear()
+                            gameAdapter.addGame(favoritedList)
+                        }).show()*/
             }
             // at last we are adding this
             // to our recycler view.
         }).attachToRecyclerView(rvFav)
-
-    }
 }

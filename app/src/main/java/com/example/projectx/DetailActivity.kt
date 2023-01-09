@@ -86,6 +86,7 @@ class DetailActivity : AppCompatActivity() {
         ct = spct.getInt("ct",0) // counterı al
         gson = Gson()
         list = ArrayList()
+
     }
     fun checkAdded(game:GameModel): Boolean {
         if(ct!=0) { // eğer favori listesi boş değilse o anki listeyi al

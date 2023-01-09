@@ -1,5 +1,6 @@
 package com.example.projectx
 
+
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -12,11 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectx.Models.GameModel
 import com.example.projectx.Models.GamesApiResponse
@@ -34,8 +33,6 @@ class GameFragment() : Fragment()  ,onClickListener {
     //lateinit var layoutManager : LinearLayoutManager
     lateinit var gridLayoutManager: GridLayoutManager  //!!!!!!
     lateinit var searchView: SearchView
-
-
     //var page = 1
     private val BASE_URL = "https://api.rawg.io/api/"
     var totalItemCount: Int = 0
@@ -201,7 +198,6 @@ class GameFragment() : Fragment()  ,onClickListener {
         call.enqueue(object: Callback<GamesApiResponse> {
             override fun onResponse(call: Call<GamesApiResponse>, response: Response<GamesApiResponse>) {
                 // başarılı bir şekilde cevap aldıysak
-
                 if(response.code() == 200){
                     // httpde body'de veri döner
                     val userList = response.body()!!.results
@@ -227,16 +223,12 @@ class GameFragment() : Fragment()  ,onClickListener {
     // ON CLİCK METHOT OGUZ
     override fun onGameClickListener(position: Int, v: View?) {
         val actv = v?.context as AppCompatActivity // viewin activitisini döndür
-        //v.setBackgroundColor(0xE0E0E0)
-
         val intent = Intent(actv,DetailActivity::class.java) // intent ile o positiona göre activitye data gönder
-
         val apiService = retrofit.create(GameApiService::class.java)
         val call : Call<GameModel> = apiService.getGameById(gameAdapter.games[position].id,"f11caa5ea61840b99a7be5ae1f243d15")
         call.enqueue(object: Callback<GameModel> {
             override fun onResponse(call: Call<GameModel>, response: Response<GameModel>) {
                 // başarılı bir şekilde cevap aldıysak
-
                 if(response.code() == 200){
                     val game = response.body()
                     intent.putExtra("game",game as GameModel)

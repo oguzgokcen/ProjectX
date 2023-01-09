@@ -1,18 +1,25 @@
 package com.example.projectx
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.projectx.Models.GameModel
 import com.example.projectx.databinding.ItemGameBinding
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
+
+
 class GameAdapter (var onClickListener : onClickListener) : RecyclerView.Adapter<GameAdapter.GameViewHolder>()
 {
     var games =  ArrayList<GameModel>()
     inner class GameViewHolder(val binding: ItemGameBinding) : RecyclerView.ViewHolder(binding.root)
-
     // if the user scrolled little bit and another item was recycled and new item needs to be viewed
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameViewHolder {
         // it will crash if we wouldn't have set last parameter as false in rv
@@ -28,7 +35,6 @@ class GameAdapter (var onClickListener : onClickListener) : RecyclerView.Adapter
             tvGame.text = games[position].name
             tvScore.text = games[position].metacritic.toString()
             var genres= " "
-
             for ((index, value) in games[position].genres.withIndex()) {
                 if(index != games[position].genres.size - 1){
                     genres += value.name.toString() + ", "
@@ -58,4 +64,5 @@ class GameAdapter (var onClickListener : onClickListener) : RecyclerView.Adapter
     override fun getItemCount(): Int {
         return games.size
     }
+
 }
