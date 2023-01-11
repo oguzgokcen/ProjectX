@@ -15,17 +15,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectx.Models.GameModel
-import com.google.android.material.snackbar.Snackbar
-
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -106,7 +99,6 @@ class FavoritesFragment : Fragment(), onClickListener {
             val json = gson.toJson(favoritedList)
             editor.putString("favGames", json)
         }
-        //gameAdapter.addGame(favoritedList)
         cteditor.apply()
         editor.apply()
         favouritesText.text = "Favorites(${favoritedList.count()})"
@@ -126,7 +118,13 @@ class FavoritesFragment : Fragment(), onClickListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // this method is called when we swipe our item to right direction.
                 // on below line we are getting the item at a particular position.
-                fun deleteGame(): (DialogInterface, Int) -> Unit {
+                val deletedGame: GameModel =
+                    favoritedList.get(viewHolder.adapterPosition)
+
+                // below line is to get the position
+                // of the item at that position.
+                val position = viewHolder.adapterPosition
+                fun deleteGame(){
                     favoritedList.removeAt(viewHolder.adapterPosition)
                     // below line is to notify our item is removed from adapter.
                     gameAdapter.games.clear()
@@ -134,14 +132,18 @@ class FavoritesFragment : Fragment(), onClickListener {
                     //gameAdapter.notifyItemRemoved(viewHolder.adapterPosition)
                     deleteFavourite()
                     Log.e("GAME ADAPTER : ",gameAdapter.games.size.toString())
-                    return deleteGame()
                 }
-                val deletedGame: GameModel =
-                    favoritedList.get(viewHolder.adapterPosition)
+                fun addGame(){
+                    deleteGame()
+                    favoritedList.add(position, deletedGame)
+                    addFavourite()
+                    // below line is to notify item is
+                    // added to our adapter class.
+                    //gameAdapter.notifyItemInserted(position)
+                    gameAdapter.games.clear()
+                    gameAdapter.addGame(favoritedList)
+                }
 
-                // below line is to get the position
-                // of the item at that position.
-                val position = viewHolder.adapterPosition
 
                 // this method is called when item is swiped.
                 // below line is to remove item from our array list.
@@ -149,27 +151,23 @@ class FavoritesFragment : Fragment(), onClickListener {
                 //gameAdapter.notifyDataSetChanged()
                 // below line is to display our snackbar with action.
 
+                // Alert Dialog
                 val builder = AlertDialog.Builder(activity,R.style.AlertDialogTheme)
-                builder.setMessage("Oyunu favoilerden çıkarmak istediğinizden emin misiniz")
-                builder.setNegativeButton("Hayır", null)
+                builder.setNegativeButton("Hayır",object:DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        addGame()
+                    }
+
+                })
                 builder.setPositiveButton(
-                    "Evet",object:DialogInterface.OnClickListener{
+                    " Evet ",object:DialogInterface.OnClickListener{
                         override fun onClick(dialog: DialogInterface?, which: Int) {
-                            favoritedList.removeAt(viewHolder.adapterPosition)
-                            // below line is to notify our item is removed from adapter.
-                            gameAdapter.games.clear()
-                            gameAdapter.addGame(favoritedList)
-                            //gameAdapter.notifyItemRemoved(viewHolder.adapterPosition)
-                            deleteFavourite()
-                            Log.e("GAME ADAPTER : ",gameAdapter.games.size.toString())
+                            deleteGame()
                         }
-
                     })
-                val dialog:AlertDialog = builder.create()
-                dialog.show()
-
-
-
+                builder.setMessage("Oyunu favoilerden çıkarmak istediğinizden emin misiniz")
+                //val dialog:AlertDialog = builder.create()
+                builder.show()
                 /*Snackbar.make(rvFav, "Deleted " + deletedGame.name, Snackbar.LENGTH_LONG)
                     .setAction(
                         "Undo",

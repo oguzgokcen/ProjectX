@@ -103,7 +103,6 @@ class GameFragment() : Fragment()  ,onClickListener {
                 gameAdapter.games.clear()
                 totalItemCount = 0
                 lastVisible = 0
-
                if(newText!!.length > 3)
                {
 
@@ -223,6 +222,7 @@ class GameFragment() : Fragment()  ,onClickListener {
     // ON CLİCK METHOT OGUZ
     override fun onGameClickListener(position: Int, v: View?) {
         val actv = v?.context as AppCompatActivity // viewin activitisini döndür
+        v.setBackgroundColor(resources.getColor(R.color.gray_project))
         val intent = Intent(actv,DetailActivity::class.java) // intent ile o positiona göre activitye data gönder
         val apiService = retrofit.create(GameApiService::class.java)
         val call : Call<GameModel> = apiService.getGameById(gameAdapter.games[position].id,"f11caa5ea61840b99a7be5ae1f243d15")
